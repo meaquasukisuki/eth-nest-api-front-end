@@ -51,11 +51,11 @@ export function HomePage({ loading, userData, isLogin }) {
 
   const handleLogin = async () => {
     dispatch(appSlice.actions.userLoginStart(userData));
-    setTimeout(() => {
-      if (isLogin) {
-        history.push('/ethquery');
-      }
-    }, 1000);
+    // setTimeout(() => {
+    //   if (isLogin) {
+    //     history.push('/ethquery');
+    //   }
+    // }, 1000);
   };
 
   return (
@@ -87,7 +87,6 @@ export function HomePage({ loading, userData, isLogin }) {
         </div>
       </div>
       <button onClick={handleLogin}>Login</button>
-      {loading && <div>loading</div>}
     </>
   );
 }

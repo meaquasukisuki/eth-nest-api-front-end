@@ -81,9 +81,11 @@
     "ip": "1.1.5",
     "lodash": "4.17.11",
     "minimist": "1.2.0",
+    "moment": "^2.29.4",
     "prop-types": "15.7.2",
-    "react": "16.8.6",
-    "react-dom": "16.8.6",
+    "react": "17.0.2",
+    "react-data-table-component": "^7.5.2",
+    "react-dom": "17.0.2",
     "react-helmet": "6.0.0-beta",
     "react-intl": "2.8.0",
     "react-redux": "latest",
@@ -92,12 +94,13 @@
     "redux-saga": "1.0.2",
     "reselect": "4.0.0",
     "sanitize.css": "8.0.0",
-    "styled-components": "4.2.0"
+    "styled-components": "5.3.1"
   },
   "devDependencies": {
     "@babel/cli": "7.4.3",
     "@babel/core": "7.4.3",
     "@babel/plugin-proposal-class-properties": "7.4.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.18.9",
     "@babel/plugin-syntax-dynamic-import": "7.2.0",
     "@babel/plugin-transform-modules-commonjs": "7.4.3",
     "@babel/plugin-transform-react-constant-elements": "7.2.0",
