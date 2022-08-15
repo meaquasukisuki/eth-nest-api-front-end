@@ -62,16 +62,16 @@ export const queryApi = createApi({
     }),
 
     queryInternalData: build.mutation({
-      query: inputQuery => {
-        const queryFields = getQueryFieldsFromInputFields(inputQuery);
+      query: inputQueries => {
+        const queries = [];
+        for (const inputQuery of inputQueries) {
+          const queryFields = getQueryFieldsFromInputFields(inputQuery);
+          queries.push(queryFields);
+        }
         return {
           url: '/local/queryTransactions/internal/queryByInputFields',
           method: 'post',
-          params: {
-            page: inputQuery.page,
-            limit: inputQuery.limit,
-          },
-          data: queryFields,
+          data: queries,
         };
       },
     }),
@@ -86,6 +86,25 @@ export const queryApi = createApi({
         };
       },
     }),
+    getAllQueryRules: build.mutation({
+      query: () => ({
+        url: '/queryRules/getAllQueryRules',
+        method: 'get',
+      }),
+    }),
+    addQueryRule: build.mutation({
+      query: rule => ({
+        url: '/queryRules/addQueryRule',
+        method: 'post',
+        data: rule,
+      }),
+    }),
+    deleteQueryRuleById: build.mutation({
+      query: id => ({
+        url: `/queryRules/deleteQueryRuleById/${id}`,
+        method: 'delete',
+      }),
+    }),
   }),
 });
 
@@ -96,4 +115,7 @@ export const {
   useQueryExternalDataCountMutation,
   useQueryInternalDataCountMutation,
   useQueryInternalDataMutation,
+  useAddQueryRuleMutation,
+  useDeleteQueryRuleByIdMutation,
+  useGetAllQueryRulesMutation,
 } = queryApi;

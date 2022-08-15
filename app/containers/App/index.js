@@ -15,6 +15,7 @@ import HomePage from 'containers/HomePage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 import QueryPage from 'containers/QueryPage/Loadable';
 import GlobalStyle from '../../global-styles';
+import RulesPage from '../RulesPage/Loadable';
 
 const AppWrapper = styled.div`
   max-width: 90%;
@@ -37,6 +38,7 @@ export default function App() {
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route exact path="/ethquery" component={QueryPage} />
+        <Route exact path="/ethqueryrules" component={RulesPage} />
         <Route path="" component={NotFoundPage} />
         <Route path="/sorry" component={NotFoundPage} />
       </Switch>
