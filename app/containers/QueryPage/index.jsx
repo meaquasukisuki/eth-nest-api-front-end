@@ -3,12 +3,13 @@ import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-
+import LoadingIndicator from 'components/LoadingIndicator';
+import history from 'utils/history';
 import {
   useQueryExternalDataMutation,
   useQueryExternalDataCountMutation,
-  useQueryInternalDataCountMutation,
   useQueryInternalDataMutation,
+  useGetAllQueryRulesMutation,
 } from '../../api/api';
 import SearchField from './components/SearchFields';
 import ExternalTxDataTable from './components/ExternalTxDataTable';
@@ -23,11 +24,10 @@ export function QueryPage() {
 
   const [searchClicked, setSearchClicked] = useState(false);
   const [externalTotalRows, setExternalTotalRows] = useState(0);
-  const [internalTotalRows, setInternalTotalRows] = useState(0);
+  // const [internalTotalRows, setInternalTotalRows] = useState(0);
   const [externalPage, setExternalPage] = useState(1);
   const [externalRowsPerPage, setExternalRowsPerPage] = useState(10);
-  const [internalPage, setInternalPage] = useState(1);
-  const [internalRowsPerPage, setInternalRowsPerPage] = useState(10);
+  const [renderInternalClicked, setRenderInternalClicked] = useState(false);
 
   const [
     queryExternalDataCount,
@@ -38,30 +38,13 @@ export function QueryPage() {
     },
   ] = useQueryExternalDataCountMutation();
 
-  const [
-    queryInternalDataCount,
-    {
-      isLoading: internalDataCountLoading,
-      data: internalDataCount,
-      isSuccess: isInternalDataCountSuccess,
-    },
-  ] = useQueryInternalDataCountMutation();
-
   useEffect(() => {
     if (!externalDataCountLoading && isExternalDataCountSuccess) {
       setExternalTotalRows(externalDataCount);
     }
 
-    if (!internalDataCountLoading && isInternalDataCountSuccess) {
-      setInternalTotalRows(internalDataCount);
-    }
     return () => {};
-  }, [
-    externalDataCountLoading,
-    isExternalDataCountSuccess,
-    internalDataCountLoading,
-    isInternalDataCountSuccess,
-  ]);
+  }, [externalDataCountLoading, isExternalDataCountSuccess]);
 
   const [
     queryExternalData,
@@ -77,12 +60,27 @@ export function QueryPage() {
     {
       isLoading: internalDataLoading,
       data: internalTxData,
-      // isSuccess: isInternalTxDataSuccess,
+      isSuccess: isInternalTxDataSuccess,
     },
   ] = useQueryInternalDataMutation();
 
+  const [
+    getAllQueryRules,
+    {
+      isLoading: isGetAllQueryRulesLoading,
+      data: allQueryRules,
+      isSuccess: isGetAllQueryRulesSuccess,
+    },
+  ] = useGetAllQueryRulesMutation();
+
+  useEffect(() => {
+    getAllQueryRules();
+
+    return () => {};
+  }, []);
+
   const externalLoading = externalDataLoading || externalDataCountLoading;
-  const internalLoading = internalDataLoading || internalDataCountLoading;
+  const internalLoading = internalDataLoading || isGetAllQueryRulesLoading;
 
   const onChangeExternalPage = page => {
     queryExternalData({
@@ -102,25 +100,6 @@ export function QueryPage() {
     setExternalRowsPerPage(externalRowsPerPage);
   };
 
-  const onChangeInternalPage = page => {
-    queryInternalData({
-      ...searchField,
-      page,
-      limit: internalRowsPerPage,
-    });
-    setInternalPage(page);
-  };
-
-  const onChangeInternalRowsPerPage = (internalRowsPerPage, page) => {
-    queryInternalData({
-      ...searchField,
-      page,
-      limit: internalRowsPerPage,
-    });
-
-    setInternalRowsPerPage(internalRowsPerPage);
-  };
-
   return (
     <>
       <Helmet>
@@ -130,6 +109,13 @@ export function QueryPage() {
           content="A React.js Boilerplate application query page"
         />
       </Helmet>
+      <button
+        onClick={() => {
+          history.push('/ethqueryrules');
+        }}
+      >
+        Go to rules page
+      </button>
       <SearchField
         searchField={searchField}
         setSearchField={setSearchField}
@@ -140,21 +126,45 @@ export function QueryPage() {
         onClick={async () => {
           setSearchClicked(true);
           queryExternalDataCount(searchField);
-          queryInternalDataCount(searchField);
           queryExternalData({
             ...searchField,
             page: externalPage,
             limit: externalRowsPerPage,
           });
-          queryInternalData({
-            ...searchField,
-            page: internalPage,
-            limit: internalRowsPerPage,
-          });
         }}
       >
         Search
       </button>
+
+      <button
+        onClick={async () => {
+          setRenderInternalClicked(true);
+          queryInternalData(allQueryRules);
+        }}
+      >
+        render internal
+      </button>
+      {/* Internal data table */}
+      {isGetAllQueryRulesLoading ? (
+        <LoadingIndicator />
+      ) : (
+        <>
+          {isInternalTxDataSuccess &&
+            internalTxData.map((item, index) => {
+              return (
+                <InternalTxDataTable
+                  title={item._id}
+                  internalTotalRows={item.count}
+                  renderInternalClicked={renderInternalClicked}
+                  data={item.records}
+                  isLoading={internalDataLoading}
+                  key={index}
+                />
+              );
+            })}
+        </>
+      )}
+
       <div
         style={{
           border: '5px solid blue',
@@ -170,10 +180,9 @@ export function QueryPage() {
           onChangeExternalRowsPerPage={onChangeExternalRowsPerPage}
         />
       </div>
-      <div
+      {/* <div
         style={{
           border: '5px solid red',
-          // marginBottom: '50px',
         }}
       >
         <InternalTxDataTable
@@ -184,7 +193,7 @@ export function QueryPage() {
           onChangeInternalPage={onChangeInternalPage}
           onChangeInternalRowsPerPage={onChangeInternalRowsPerPage}
         />
-      </div>
+      </div> */}
     </>
   );
 }

@@ -106,12 +106,13 @@ const ExpandableComponent = ({ data }) => {
 };
 
 const InternalTxDataTable = ({
-  searchClicked,
+  renderInternalClicked,
   internalTotalRows,
   data,
   isLoading,
-  onChangeInternalPage,
-  onChangeInternalRowsPerPage,
+  title,
+  // onChangeInternalPage,
+  // onChangeInternalRowsPerPage,
 }) => {
   const expandableData = data?.map(item => {
     let disabled = true;
@@ -121,18 +122,18 @@ const InternalTxDataTable = ({
     return { ...item, disabled };
   });
   return (
-    <>
-      {searchClicked && (
+    <div style={{ border: '2px solid grey', marginBottom: '50px' }}>
+      {renderInternalClicked && (
         <>
           <DataTable
-            title={'Internal'}
+            title={title}
             columns={columns}
             progressPending={isLoading}
             pagination
-            paginationServer
+            // paginationServer
             paginationTotalRows={internalTotalRows}
-            onChangeRowsPerPage={onChangeInternalRowsPerPage}
-            onChangePage={onChangeInternalPage}
+            // onChangeRowsPerPage={onChangeInternalRowsPerPage}
+            // onChangePage={onChangeInternalPage}
             data={expandableData}
             progressComponent={LoadingIndicator()}
             expandableRows
@@ -141,7 +142,7 @@ const InternalTxDataTable = ({
           />
         </>
       )}
-    </>
+    </div>
   );
 };
 

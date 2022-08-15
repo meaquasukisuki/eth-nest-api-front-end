@@ -76,16 +76,16 @@ export const queryApi = createApi({
       },
     }),
 
-    queryInternalDataCount: build.mutation({
-      query: inputQuery => {
-        const queryFields = getQueryFieldsFromInputFields(inputQuery);
-        return {
-          url: '/local/queryTransactions/internal/count/queryByInputFields',
-          method: 'post',
-          data: queryFields,
-        };
-      },
-    }),
+    // queryInternalDataCount: build.mutation({
+    //   query: inputQuery => {
+    //     const queryFields = getQueryFieldsFromInputFields(inputQuery);
+    //     return {
+    //       url: '/local/queryTransactions/internal/count/queryByInputFields',
+    //       method: 'post',
+    //       data: queryFields,
+    //     };
+    //   },
+    // }),
     getAllQueryRules: build.mutation({
       query: () => ({
         url: '/queryRules/getAllQueryRules',

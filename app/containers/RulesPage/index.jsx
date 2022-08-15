@@ -3,26 +3,14 @@ import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import history from 'utils/history';
 import LoadingIndicator from 'components/LoadingIndicator';
 import RuleCard from './components/RuleCard';
 
-import {
-  useAddQueryRuleMutation,
-  useDeleteQueryRuleByIdMutation,
-  useGetAllQueryRulesMutation,
-} from '../../api/api';
+import { useGetAllQueryRulesMutation } from '../../api/api';
 import InnerSearchField from './components/InnerSearchField';
 
 export function QueryRulesPage() {
-  const [
-    addQueryRule,
-    {
-      isLoading: isAddQueryRuleLoading,
-      data: addQueryRuleData,
-      isSuccess: isAddQueryRuleSuccess,
-    },
-  ] = useAddQueryRuleMutation();
-
   const [
     getAllQueryRule,
     {
@@ -60,6 +48,13 @@ export function QueryRulesPage() {
         <LoadingIndicator />
       ) : (
         <>
+          <p
+            style={{
+              color: 'red',
+            }}
+          >
+            These rules are chained by OR operator not AND
+          </p>
           {isGetAllQueryRuleSuccess && (
             <div
               style={{
@@ -84,6 +79,13 @@ export function QueryRulesPage() {
           )}
         </>
       )}
+      <button
+        onClick={() => {
+          history.push('/ethquery');
+        }}
+      >
+        Back to query page
+      </button>
     </>
   );
 }
